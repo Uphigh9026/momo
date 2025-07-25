@@ -1,0 +1,220 @@
+.home-wrap {
+  padding: 40px 16px 112px 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #f8fafc;
+  min-height: 100vh;
+}
+.home-banner {
+  background: linear-gradient(135deg, #cfe2ff 0%, #fff 100%);
+  border-radius: 24px;
+  padding: 40px 20px 32px 20px;
+  margin-bottom: 40px;
+  text-align: center;
+  box-shadow: 0 2px 16px 0 rgba(0,0,0,0.04);
+}
+.home-banner-site {
+  color: #2563eb;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+.home-search-form {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.home-search-form input {
+  flex: 1;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 1em;
+}
+.home-search-form button {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0 24px;
+  font-weight: bold;
+  font-size: 1em;
+  cursor: pointer;
+}
+.home-section {
+  margin-bottom: 40px;
+}
+.home-section h2 {
+  font-size: 1.3em;
+  font-weight: bold;
+  margin-bottom: 18px;
+}
+.home-flex-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  justify-content: flex-start;
+}
+.home-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 20px 16px;
+  min-width: 120px;
+  max-width: 180px;
+  flex: 1 1 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.03);
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+.home-card:hover {
+  box-shadow: 0 4px 16px 0 rgba(37,99,235,0.08);
+}
+.home-card-icon {
+  width: 48px;
+  height: 48px;
+  background: #f1f5f9;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2em;
+  color: #2563eb;
+  margin-bottom: 8px;
+}
+.home-card-title {
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+.home-card-desc {
+  font-size: 0.9em;
+  color: #64748b;
+}
+.home-review {
+  min-width: 180px;
+  max-width: 220px;
+  align-items: flex-start;
+  text-align: left;
+}
+.home-review-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.home-review-user {
+  color: #2563eb;
+  font-weight: bold;
+}
+.home-review-cat {
+  background: #e0e7ff;
+  color: #3730a3;
+  font-size: 0.8em;
+  padding: 2px 8px;
+  border-radius: 8px;
+}
+.home-review-rating {
+  color: #fbbf24;
+  margin-left: auto;
+  font-size: 1em;
+}
+.home-review-content {
+  color: #334155;
+  font-size: 0.98em;
+}
+.home-recommend {
+  min-width: 180px;
+  max-width: 220px;
+  align-items: flex-start;
+  text-align: left;
+}
+.home-recommend-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.home-recommend-title {
+  font-weight: bold;
+  font-size: 1.05em;
+}
+.home-recommend-tag {
+  background: #fef9c3;
+  color: #b45309;
+  font-size: 0.8em;
+  padding: 2px 8px;
+  border-radius: 8px;
+}
+.home-recommend-desc {
+  color: #64748b;
+  font-size: 0.98em;
+}
+.home-floating {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 100;
+}
+.home-floating-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 12px 28px;
+  font-size: 1em;
+  font-weight: bold;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.home-kakao {
+  background: #3fc94d;
+  color: #fff;
+}
+.home-register {
+  background: #222;
+  color: #fff;
+}
+.home-signup-section {
+  margin-bottom: 32px;
+  text-align: center;
+}
+.home-signup-section h3 {
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.home-signup-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 12px;
+}
+.signup-btn {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 1em;
+  font-weight: bold;
+  cursor: pointer;
+  min-width: 140px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.04);
+  transition: background 0.2s;
+}
+.signup-btn.naver { background: #03c75a; color: #fff; }
+.signup-btn.google { background: #fff; color: #222; border: 1px solid #e5e7eb; }
+.signup-btn.apple { background: #222; color: #fff; }
+.signup-btn.kakao { background: #fee500; color: #3c1e1e; }
+.signup-btn.email { background: #2563eb; color: #fff; } 
