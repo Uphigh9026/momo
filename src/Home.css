@@ -625,3 +625,172 @@ body {
   background: #2563eb;
   color: #fff;
 } 
+
+@media (max-width: 768px) {
+  .home-wrap {
+    padding: 10px 2px 80px 2px;
+    max-width: 100vw;
+    border-radius: 0;
+    box-shadow: none;
+    min-height: 100vh;
+  }
+  .home-banner {
+    padding: 24px 6px 24px 6px;
+    border-radius: 0;
+    margin-bottom: 24px;
+  }
+  .home-search-form {
+    max-width: 100vw;
+    gap: 6px;
+  }
+  .home-search-form input {
+    padding: 10px;
+    font-size: 1em;
+    border-radius: 8px;
+  }
+  .home-search-form button {
+    padding: 0 14px;
+    font-size: 1em;
+    border-radius: 8px;
+  }
+  .home-section {
+    margin-bottom: 24px;
+  }
+  .home-section h2 {
+    font-size: 1.08em;
+    margin-bottom: 12px;
+  }
+  .home-flex-row {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  .home-card {
+    min-width: 0;
+    max-width: 100vw;
+    width: 100%;
+    padding: 14px 6px 12px 6px;
+    border-radius: 10px;
+    font-size: 0.98em;
+  }
+  .home-card-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.5em;
+    margin-bottom: 6px;
+  }
+  .brand-logo {
+    width: 90%;
+    height: 24px;
+    margin-bottom: 8px;
+  }
+  .home-card-title {
+    font-size: 1em;
+  }
+  .home-card-desc {
+    font-size: 0.95em;
+  }
+  .home-review, .home-recommend {
+    min-width: 0;
+    max-width: 100vw;
+    font-size: 0.98em;
+    padding: 10px 6px;
+  }
+  .home-floating {
+    bottom: 12px;
+    right: 12px;
+    gap: 8px;
+  }
+  .home-floating-btn {
+    padding: 10px 18px;
+    font-size: 1em;
+    border-radius: 999px;
+  }
+  .suggest-list {
+    top: 40px;
+    border-radius: 8px;
+    font-size: 0.98em;
+  }
+  .suggest-list li {
+    padding: 10px 12px;
+  }
+  .login-form {
+    gap: 10px;
+  }
+  .login-input {
+    padding: 10px;
+    font-size: 1em;
+    border-radius: 8px;
+  }
+  .login-btn {
+    padding: 10px 0;
+    font-size: 1em;
+    border-radius: 8px;
+  }
+  .home-signup-section {
+    margin-bottom: 18px;
+  }
+  .signup-btn {
+    padding: 10px 10px;
+    font-size: 1em;
+    min-width: 100px;
+    border-radius: 8px;
+  }
+  .like-btn {
+    top: 6px;
+    right: 6px;
+  }
+  .brand-actions {
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .brand-actions button {
+    padding: 7px 10px;
+    font-size: 0.98em;
+    border-radius: 7px;
+  }
+  .group-info, .group-vote, .group-comments {
+    padding: 8px 4px 8px 4px;
+    border-radius: 8px;
+    font-size: 0.97em;
+  }
+  .group-suggest-btn, .group-vote-btn, .group-apply-btn, .kakao-btn, .group-comment-btn {
+    padding: 7px 10px;
+    font-size: 0.98em;
+    border-radius: 7px;
+  }
+  .group-comments-list {
+    max-height: 80px;
+  }
+  .nav-bar {
+    padding: 0 6px;
+    height: 48px;
+    border-radius: 0;
+  }
+  .nav-logo {
+    font-size: 1.1em;
+    margin-right: 10px;
+  }
+  .nav-menu {
+    gap: 8px;
+  }
+  .nav-menu button {
+    font-size: 0.98em;
+    padding: 4px 6px;
+    border-radius: 6px;
+  }
+  .nav-actions {
+    gap: 6px;
+  }
+  .nav-search {
+    padding: 6px 8px;
+    font-size: 0.98em;
+    border-radius: 6px;
+    margin-right: 4px;
+  }
+  .nav-actions button, .nav-customer-btn {
+    padding: 6px 8px;
+    font-size: 0.98em;
+    border-radius: 6px;
+  }
+} 
