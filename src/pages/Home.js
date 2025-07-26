@@ -1,7 +1,7 @@
 import React from 'react';
-import './Home.css';
 import { useNavigate } from 'react-router-dom';
 import { fetchComplexData } from '../api/complexData';
+import './Home.css';
 
 export default function Home() {
   const navigate = useNavigate();
@@ -116,81 +116,92 @@ export default function Home() {
   ];
 
   return (
-    <div className="momo09-home-wrap">
-      {/* 메인 배너 */}
-      <div className="momo09-main-banner">
-        <div className="momo09-main-banner-title">
-          <span className="momo09-logo">모모09</span>에서<br />
+    <div className="bg-gray-50 min-h-screen font-pretendard">
+      {/* 메인 배너 - Tailwind CSS 적용 */}
+      <div className="bg-gradient-to-br from-momo-light-green to-gray-50 py-12 text-center border-b-2 border-gray-200 flex flex-col items-center">
+        <div className="text-4xl font-extrabold text-gray-800 mb-2 tracking-tight">
+          <span className="text-momo-green font-black text-5xl tracking-wide">모모09</span>에서<br />
           입주 준비, 한 번에 끝내세요
         </div>
-        <div className="momo09-main-banner-desc">
+        <div className="text-gray-600 text-lg mb-4">
           모두 모아 공구, <b>신축 아파트 입주민을 위한 공동구매·시공 플랫폼</b>
         </div>
-        <form className="momo09-search-form">
-          <input type="text" placeholder="시공/서비스, 단지명, 브랜드 검색" onChange={handleChange} onFocus={() => setShowSuggest(true)} onBlur={() => setTimeout(() => setShowSuggest(false), 100)} />
+        <form className="flex justify-center items-center gap-0 mb-3 relative w-full max-w-md mx-auto">
+          <input 
+            type="text" 
+            placeholder="시공/서비스, 단지명, 브랜드 검색" 
+            onChange={handleChange} 
+            onFocus={() => setShowSuggest(true)} 
+            onBlur={() => setTimeout(() => setShowSuggest(false), 100)}
+            className="w-full px-4 py-3 border-2 border-momo-green rounded-l-lg text-base outline-none bg-white"
+          />
           {showSuggest && query && (
-            <ul className="momo09-suggestions">
+            <ul className="absolute left-0 top-full w-full bg-white border-2 border-gray-200 rounded-b-xl shadow-lg z-10 max-h-60 overflow-y-auto">
               {filtered.slice(0, 5).map((s, i) => (
-                <li key={i} onClick={() => handleSuggestClick(s)}>{s}</li>
+                <li key={i} onClick={() => handleSuggestClick(s)} className="px-4 py-3 cursor-pointer text-gray-800 hover:bg-gray-50 transition-colors">
+                  {s}
+                </li>
               ))}
             </ul>
           )}
-          <button type="submit">검색</button>
+          <button type="submit" className="px-6 py-3 bg-momo-green text-white border-none rounded-r-lg text-base font-bold cursor-pointer hover:bg-momo-dark-green transition-colors">
+            검색
+          </button>
         </form>
-        <div className="momo09-trending">
+        <div className="text-gray-500 text-sm">
           <span>인기 검색어:</span>
           {trending.map((t, i) => (
-            <span key={i} className="momo09-trend-item">{t}</span>
+            <span key={i} className="bg-momo-light-green text-momo-green rounded-full px-3 py-1 ml-2 font-medium text-sm">
+              {t}
+            </span>
           ))}
         </div>
       </div>
 
       {/* 공지사항/이벤트 배너 */}
-      <div className="momo09-section">
-        <div className="momo09-notice-banner">
+      <div className="max-w-6xl mx-auto mt-10 px-4">
+        <div className="bg-gradient-to-br from-yellow-100 to-white rounded-xl p-4 border border-yellow-300 mb-5">
           {notices.map(notice => (
-            <div key={notice.id} className={`momo09-notice-item ${notice.important ? 'important' : ''}`}>
-              <span className="momo09-notice-title">{notice.title}</span>
-              <span className="momo09-notice-date">{notice.date}</span>
+            <div key={notice.id} className={`flex justify-between items-center py-2 border-b border-gray-200 last:border-b-0 ${notice.important ? 'bg-gradient-to-r from-red-500 to-red-400 text-white rounded-lg p-3 my-2' : ''}`}>
+              <span className={`font-semibold text-sm ${notice.important ? '' : ''}`}>{notice.title}</span>
+              <span className={`text-xs ${notice.important ? 'text-white/80' : 'text-gray-500'}`}>{notice.date}</span>
             </div>
           ))}
         </div>
       </div>
 
       {/* 카테고리 바로가기 */}
-      <div className="momo09-section">
-        <h2>카테고리 바로가기</h2>
-        <div className="momo09-category-row">
+      <div className="max-w-6xl mx-auto mt-10 px-4">
+        <h2 className="text-xl font-bold text-gray-800 mb-5 tracking-tight">카테고리 바로가기</h2>
+        <div className="flex gap-4 flex-wrap justify-start">
           {categories.map(cat => (
-            <div key={cat.id} className="momo09-category-card" onClick={() => navigate(`/category/${cat.name}`)}>
-              <div className="momo09-category-icon">{cat.icon}</div>
-              <div className="momo09-category-name">{cat.name}</div>
+            <div key={cat.id} className="bg-white rounded-2xl shadow-lg p-6 min-w-32 max-w-36 flex-1 text-center cursor-pointer transition-all hover:shadow-xl hover:-translate-y-1 hover:scale-105 mb-3" onClick={() => navigate(`/category/${cat.name}`)}>
+              <div className="text-4xl mb-2">{cat.icon}</div>
+              <div className="font-semibold text-gray-800 text-lg">{cat.name}</div>
             </div>
           ))}
         </div>
       </div>
 
       {/* 시공 전후 갤러리 */}
-      <div className="momo09-section">
-        <h2>시공 전후 갤러리</h2>
-        <div className="momo09-gallery-row">
+      <div className="max-w-6xl mx-auto mt-10 px-4">
+        <h2 className="text-xl font-bold text-gray-800 mb-5 tracking-tight">시공 전후 갤러리</h2>
+        <div className="flex gap-4 flex-wrap">
           {beforeAfterGallery.map(item => (
-            <div key={item.id} className="momo09-gallery-card">
-              <div className="momo09-gallery-images">
-                <div className="momo09-before-after">
-                  <div className="momo09-before">
-                    <span className="momo09-image-placeholder">{item.before}</span>
-                    <span className="momo09-before-label">시공 전</span>
-                  </div>
-                  <div className="momo09-after">
-                    <span className="momo09-image-placeholder">{item.after}</span>
-                    <span className="momo09-after-label">시공 후</span>
-                  </div>
+            <div key={item.id} className="bg-white rounded-2xl shadow-lg p-4 min-w-72 max-w-80 flex-1 mb-3 cursor-pointer transition-all hover:shadow-xl hover:-translate-y-1 hover:scale-105">
+              <div className="flex gap-3 mb-3">
+                <div className="flex-1 text-center p-4 rounded-xl bg-gray-50">
+                  <span className="text-5xl block mb-2">{item.before}</span>
+                  <span className="text-sm font-semibold text-gray-600">시공 전</span>
+                </div>
+                <div className="flex-1 text-center p-4 rounded-xl bg-gradient-to-br from-momo-light-green to-blue-50">
+                  <span className="text-5xl block mb-2">{item.after}</span>
+                  <span className="text-sm font-semibold text-momo-green">시공 후</span>
                 </div>
               </div>
-              <div className="momo09-gallery-info">
-                <div className="momo09-gallery-category">{item.category}</div>
-                <div className="momo09-gallery-complex">{item.complex}</div>
+              <div className="text-center">
+                <div className="font-bold text-momo-green text-lg mb-1">{item.category}</div>
+                <div className="text-gray-600 text-sm">{item.complex}</div>
               </div>
             </div>
           ))}
@@ -198,65 +209,61 @@ export default function Home() {
       </div>
 
       {/* 실시간 공동구매 진행현황 */}
-      <div className="momo09-section">
-        <h2>🔥 실시간 공동구매 진행현황</h2>
-        <div className="momo09-group-purchase-row">
+      <div className="max-w-6xl mx-auto mt-10 px-4">
+        <h2 className="text-xl font-bold text-gray-800 mb-5 tracking-tight">🔥 실시간 공동구매 진행현황</h2>
+        <div className="flex gap-4 flex-wrap">
           {groupPurchases.map(item => (
-            <div key={item.id} className="momo09-group-purchase-card">
-              <div className="momo09-group-purchase-header">
-                <div className="momo09-group-purchase-title">{item.product}</div>
-                <div className="momo09-group-purchase-discount">{item.discount} 할인</div>
+            <div key={item.id} className="bg-gradient-to-br from-red-500 to-red-400 rounded-2xl p-4 min-w-72 max-w-80 flex-1 mb-3 text-white">
+              <div className="flex justify-between items-center mb-3">
+                <div className="font-bold text-lg">{item.product}</div>
+                <div className="bg-white/20 px-2 py-1 rounded-lg text-sm font-bold">{item.discount} 할인</div>
               </div>
-              <div className="momo09-group-purchase-progress">
-                <div className="momo09-progress-bar">
+              <div className="mb-3">
+                <div className="w-full h-2 bg-white/30 rounded-full overflow-hidden mb-2">
                   <div 
-                    className="momo09-progress-fill" 
+                    className="h-full bg-white rounded-full transition-all duration-300"
                     style={{width: `${(item.current / item.target) * 100}%`}}
                   ></div>
                 </div>
-                <div className="momo09-progress-text">
-                  {item.current}/{item.target}명 참여
-                </div>
+                <div className="text-sm text-center">{item.current}/{item.target}명 참여</div>
               </div>
-              <div className="momo09-group-purchase-end">
-                마감일: {item.endDate}
-              </div>
+              <div className="text-xs text-center opacity-90">마감일: {item.endDate}</div>
             </div>
           ))}
         </div>
       </div>
 
       {/* 실시간 후기/시공사례 */}
-      <div className="momo09-section">
-        <h2>실시간 후기/시공사례</h2>
-        <div className="momo09-review-row">
+      <div className="max-w-6xl mx-auto mt-10 px-4">
+        <h2 className="text-xl font-bold text-gray-800 mb-5 tracking-tight">실시간 후기/시공사례</h2>
+        <div className="flex gap-4 flex-wrap">
           {reviews.map(r => (
-            <div key={r.id} className="momo09-review-card">
-              <div className="momo09-review-header">
-                <span className="momo09-review-user">{r.user}</span>
-                <span className="momo09-review-cat">{r.category}</span>
-                <span className="momo09-review-rating">{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</span>
+            <div key={r.id} className="bg-white rounded-2xl shadow-lg p-4 min-w-56 max-w-64 flex-1 mb-3">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="font-bold text-momo-green">{r.user}</span>
+                <span className="bg-momo-light-green text-momo-green rounded-lg px-2 py-1 text-sm ml-1">{r.category}</span>
+                <span className="text-yellow-400 text-lg ml-2">{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</span>
               </div>
-              <div className="momo09-review-content">{r.content}</div>
+              <div className="text-gray-700 text-sm">{r.content}</div>
             </div>
           ))}
         </div>
       </div>
 
       {/* 고객 후기 사진 갤러리 */}
-      <div className="momo09-section">
-        <h2>📸 고객 후기 사진 갤러리</h2>
-        <div className="momo09-review-photo-row">
+      <div className="max-w-6xl mx-auto mt-10 px-4">
+        <h2 className="text-xl font-bold text-gray-800 mb-5 tracking-tight">📸 고객 후기 사진 갤러리</h2>
+        <div className="flex gap-4 flex-wrap">
           {reviewPhotos.map(item => (
-            <div key={item.id} className="momo09-review-photo-card">
-              <div className="momo09-review-photo-image">
-                <span className="momo09-photo-placeholder">{item.photo}</span>
+            <div key={item.id} className="bg-white rounded-2xl shadow-lg p-4 min-w-56 max-w-64 flex-1 mb-3 cursor-pointer transition-all hover:shadow-xl hover:-translate-y-1 hover:scale-105">
+              <div className="text-center mb-3">
+                <span className="text-6xl block">{item.photo}</span>
               </div>
-              <div className="momo09-review-photo-info">
-                <div className="momo09-review-photo-user">{item.user}</div>
-                <div className="momo09-review-photo-category">{item.category}</div>
-                <div className="momo09-review-photo-rating">{'★'.repeat(item.rating)}</div>
-                <div className="momo09-review-photo-comment">{item.comment}</div>
+              <div className="text-center">
+                <div className="font-bold text-momo-green mb-1">{item.user}</div>
+                <div className="bg-momo-light-green text-momo-green rounded-lg px-2 py-1 text-sm inline-block mb-2">{item.category}</div>
+                <div className="text-yellow-400 text-lg mb-2">{'★'.repeat(item.rating)}</div>
+                <div className="text-gray-700 text-sm">{item.comment}</div>
               </div>
             </div>
           ))}
@@ -264,100 +271,102 @@ export default function Home() {
       </div>
 
       {/* 추천 전문가/브랜드/상품 */}
-      <div className="momo09-section">
-        <h2>추천 전문가/브랜드/상품</h2>
-        <div className="momo09-recommend-row">
+      <div className="max-w-6xl mx-auto mt-10 px-4">
+        <h2 className="text-xl font-bold text-gray-800 mb-5 tracking-tight">추천 전문가/브랜드/상품</h2>
+        <div className="flex gap-4 flex-wrap">
           {recommends.map(rec => (
-            <div key={rec.id} className="momo09-recommend-card">
-              <div className="momo09-recommend-title">{rec.name}</div>
-              <div className="momo09-recommend-tag">{rec.tag}</div>
-              <div className="momo09-recommend-desc">{rec.desc}</div>
+            <div key={rec.id} className="bg-white rounded-2xl shadow-lg p-4 min-w-56 max-w-64 flex-1 mb-3">
+              <div className="font-bold text-momo-green text-lg mb-1">{rec.name}</div>
+              <div className="bg-momo-light-green text-momo-green rounded-lg px-2 py-1 text-sm mb-2 inline-block">{rec.tag}</div>
+              <div className="text-gray-700 text-sm">{rec.desc}</div>
             </div>
           ))}
         </div>
       </div>
 
       {/* 전문가 인터뷰/스토리 */}
-      <div className="momo09-section">
-        <h2>👨‍🔧 전문가 인터뷰</h2>
-        <div className="momo09-expert-story-row">
+      <div className="max-w-6xl mx-auto mt-10 px-4">
+        <h2 className="text-xl font-bold text-gray-800 mb-5 tracking-tight">👨‍🔧 전문가 인터뷰</h2>
+        <div className="flex gap-4 flex-wrap">
           {expertStories.map(expert => (
-            <div key={expert.id} className="momo09-expert-story-card">
-              <div className="momo09-expert-header">
-                <div className="momo09-expert-name">{expert.name}</div>
-                <div className="momo09-expert-specialty">{expert.specialty} 전문</div>
+            <div key={expert.id} className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl p-4 min-w-72 max-w-80 flex-1 mb-3 text-white">
+              <div className="flex justify-between items-center mb-2">
+                <div className="font-bold text-lg">{expert.name}</div>
+                <div className="bg-white/20 px-2 py-1 rounded-lg text-sm">{expert.specialty} 전문</div>
               </div>
-              <div className="momo09-expert-experience">{expert.experience} 경력</div>
-              <div className="momo09-expert-story">{expert.story}</div>
+              <div className="text-sm mb-3 opacity-90">{expert.experience} 경력</div>
+              <div className="italic leading-relaxed">{expert.story}</div>
             </div>
           ))}
         </div>
       </div>
 
       {/* 고객 만족도 통계 */}
-      <div className="momo09-section">
-        <h2>📊 고객 만족도 통계</h2>
-        <div className="momo09-satisfaction-row">
+      <div className="max-w-6xl mx-auto mt-10 px-4">
+        <h2 className="text-xl font-bold text-gray-800 mb-5 tracking-tight">📊 고객 만족도 통계</h2>
+        <div className="flex gap-4 flex-wrap">
           {satisfactionStats.map(stat => (
-            <div key={stat.category} className="momo09-satisfaction-card">
-              <div className="momo09-satisfaction-category">{stat.category}</div>
-              <div className="momo09-satisfaction-rate">{stat.satisfaction}%</div>
-              <div className="momo09-satisfaction-count">{stat.count}건</div>
+            <div key={stat.category} className="bg-white rounded-2xl shadow-lg p-4 min-w-52 max-w-60 flex-1 mb-3 text-center">
+              <div className="font-bold text-momo-green text-lg mb-2">{stat.category}</div>
+              <div className="text-4xl font-bold text-momo-green mb-1">{stat.satisfaction}%</div>
+              <div className="text-gray-600 text-sm">{stat.count}건</div>
             </div>
           ))}
         </div>
       </div>
 
       {/* 단지별 인기 상품 TOP 10 */}
-      <div className="momo09-section">
-        <h2>🏆 인기 상품 TOP 5</h2>
-        <div className="momo09-top-products-row">
+      <div className="max-w-6xl mx-auto mt-10 px-4">
+        <h2 className="text-xl font-bold text-gray-800 mb-5 tracking-tight">🏆 인기 상품 TOP 5</h2>
+        <div className="flex gap-4 flex-wrap">
           {topProducts.map((product, index) => (
-            <div key={product.id} className="momo09-top-product-card">
-              <div className="momo09-top-product-rank">#{index + 1}</div>
-              <div className="momo09-top-product-name">{product.name}</div>
-              <div className="momo09-top-product-stats">
-                <span className="momo09-top-product-sales">판매 {product.sales}건</span>
-                <span className="momo09-top-product-rating">★ {product.rating}</span>
+            <div key={product.id} className="bg-white rounded-2xl shadow-lg p-4 min-w-56 max-w-64 flex-1 mb-3 relative cursor-pointer transition-all hover:shadow-xl hover:-translate-y-1 hover:scale-105">
+              <div className="absolute -top-2 -left-2 bg-gradient-to-br from-red-500 to-red-400 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm">
+                #{index + 1}
               </div>
-              <div className="momo09-top-product-price">{product.price}</div>
+              <div className="font-bold text-gray-800 text-lg mb-2 mt-2">{product.name}</div>
+              <div className="flex justify-between mb-2">
+                <span className="text-gray-600 text-sm">판매 {product.sales}건</span>
+                <span className="text-yellow-400 font-bold">★ {product.rating}</span>
+              </div>
+              <div className="font-bold text-momo-green text-lg">{product.price}</div>
             </div>
           ))}
         </div>
       </div>
 
       {/* 시즌별 추천 상품 */}
-      <div className="momo09-section">
-        <h2>🎁 시즌별 추천 상품</h2>
-        <div className="momo09-seasonal-row">
+      <div className="max-w-6xl mx-auto mt-10 px-4">
+        <h2 className="text-xl font-bold text-gray-800 mb-5 tracking-tight">🎁 시즌별 추천 상품</h2>
+        <div className="flex gap-4 flex-wrap">
           {seasonalProducts.map(item => (
-            <div key={item.id} className="momo09-seasonal-card">
-              <div className="momo09-seasonal-name">{item.name}</div>
-              <div className="momo09-seasonal-discount">{item.discount}</div>
-              <div className="momo09-seasonal-tag">{item.tag}</div>
+            <div key={item.id} className="bg-gradient-to-br from-pink-400 to-red-500 rounded-2xl p-4 min-w-56 max-w-64 flex-1 mb-3 text-white cursor-pointer transition-all hover:shadow-xl hover:-translate-y-1 hover:scale-105">
+              <div className="font-bold text-lg mb-2">{item.name}</div>
+              <div className="text-2xl font-bold mb-2">{item.discount}</div>
+              <div className="bg-white/20 px-2 py-1 rounded-lg text-sm inline-block">{item.tag}</div>
             </div>
           ))}
         </div>
       </div>
 
       {/* 단지 커뮤니티 */}
-      <div className="momo09-section">
-        <h2>인기 단지 커뮤니티</h2>
-        <div className="momo09-community-row">
+      <div className="max-w-6xl mx-auto mt-10 px-4">
+        <h2 className="text-xl font-bold text-gray-800 mb-5 tracking-tight">인기 단지 커뮤니티</h2>
+        <div className="flex gap-4 flex-wrap">
           {communities.map(comm => (
-            <div key={comm.id} className="momo09-community-card" onClick={() => navigate(`/complex/${comm.id}/community`)}>
-              <div className="momo09-community-name">{comm.name}</div>
-              <div className="momo09-community-stats">👥 {comm.members}명 · 💬 {comm.posts}개 글</div>
-              <div className="momo09-community-tag">{comm.tag}</div>
+            <div key={comm.id} className="bg-gradient-to-br from-momo-light-green to-gray-50 rounded-2xl shadow-lg p-4 min-w-56 max-w-64 flex-1 mb-3 cursor-pointer transition-all hover:shadow-xl hover:-translate-y-1 hover:scale-105" onClick={() => navigate(`/complex/${comm.id}/community`)}>
+              <div className="font-bold text-momo-green text-lg mb-1">{comm.name}</div>
+              <div className="text-gray-600 text-sm mb-2">👥 {comm.members}명 · 💬 {comm.posts}개 글</div>
+              <div className="bg-white text-momo-green rounded-lg px-2 py-1 text-sm inline-block">{comm.tag}</div>
             </div>
           ))}
         </div>
       </div>
 
       {/* 하단 고객센터/회사정보 */}
-      <footer className="momo09-footer">
+      <footer className="bg-white text-gray-600 text-center py-8 mt-12 border-t-2 border-gray-200">
         <div>고객센터 1670-0876 (09:00~18:00)</div>
-        <div>모두 모아 공구, <b>모모09</b></div>
+        <div>모두 모아 공구, <b className="text-momo-green">모모09</b></div>
         <div>© 2024 momo09. All rights reserved.</div>
       </footer>
     </div>
