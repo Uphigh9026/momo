@@ -19,7 +19,7 @@ const BRANDS = [
     name: '한샘',
     desc: '국내 대표 종합 인테리어 브랜드',
     url: 'https://mall.hanssem.com/',
-    logo: '/images/sample-logo.png',
+    logo: '한샘',
     actions: true,
     group: {
       deadline: '2025-12-31T23:59:00',
@@ -33,7 +33,7 @@ const BRANDS = [
     name: '리바트',
     desc: '현대리바트의 프리미엄 가구 브랜드',
     url: 'https://www.hyundailivart.co.kr/',
-    logo: '/images/sample-logo.png',
+    logo: '리바트',
     groupStatus: '마감',
   },
   {
@@ -41,7 +41,7 @@ const BRANDS = [
     name: '일룸',
     desc: '생활을 바꾸는 가구, 일룸',
     url: 'https://www.iloom.com/',
-    logo: '/images/sample-logo.png',
+    logo: '일룸',
     groupStatus: '준비중',
   },
 ];
@@ -121,10 +121,29 @@ export default function CategoryCloset() {
 
   return (
     <div className="home-wrap">
+      {/* 상단 자극적 배너 */}
+      <div className="closet-banner">
+        <span className="closet-banner-icon">🏆</span>
+        <span className="closet-banner-main">전월 붙박이장 신축 단지 설치 우수 브랜드 1위: <b style={{color:'#e11d48'}}>일룸</b>!</span>
+        <span className="closet-banner-sub">많은 고객님들이 <b>일룸</b>을 선택하고 있습니다!</span>
+      </div>
       <h2 style={{fontSize: '1.6em', fontWeight: 'bold', marginBottom: 24}}>붙박이장 브랜드</h2>
       <div className="home-flex-row">
         {BRANDS.map((brand, idx) => (
-          <div key={brand.id} className="home-card" style={{minWidth: 180, maxWidth: 320, alignItems: 'flex-start', textAlign: 'left', position: 'relative'}}>
+          <div
+            key={brand.id}
+            className="home-card"
+            style={{
+              minWidth: 180,
+              maxWidth: 320,
+              alignItems: 'flex-start',
+              textAlign: 'left',
+              position: 'relative',
+              background: brand.id === 'hanssem' ? '#eaf3ff' : brand.id === 'livart' ? '#f5f6fa' : '#fffbe6',
+              border: '1.5px solid #e5e7eb',
+              boxShadow: '0 4px 16px 0 rgba(37,99,235,0.06)',
+            }}
+          >
             {/* 찜 하트 */}
             <button
               className="like-btn"
@@ -136,11 +155,52 @@ export default function CategoryCloset() {
                 {likes[brand.id] ? '♥' : '♡'}
               </span>
             </button>
-            {/* 브랜드 로고 */}
-            <img src={brand.logo} alt={brand.name + ' 로고'} className="brand-logo" />
-            <div style={{fontWeight: 'bold', fontSize: '1.2em', marginBottom: 6}}>{brand.name}</div>
-            <div style={{fontSize: '0.98em', color: '#64748b', marginBottom: 10}}>{brand.desc}</div>
-            <a href={brand.url} target="_blank" rel="noopener noreferrer" style={{color: '#2563eb', fontWeight: 'bold', fontSize: '0.97em', display: 'block', marginBottom: 10}}>공식 사이트 바로가기</a>
+            {/* 오늘의집 스타일: 상단 인테리어 이미지, 로고+뱃지, 브랜드명, 별점, 설명, 버튼, 정보 */}
+            <div className="ohou-card-top">
+              <img
+                src={brand.id === 'hanssem' ? 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80'
+                  : brand.id === 'livart' ? 'https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=600&q=80'
+                  : 'https://images.unsplash.com/photo-1460518451285-97b6aa326961?auto=format&fit=crop&w=600&q=80'}
+                alt={brand.name + ' 인테리어 샘플'}
+                className="ohou-main-img"
+              />
+            </div>
+            <div style={{display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8, marginTop: 10}}>
+              <span className="brand-logo-text">{brand.logo}</span>
+              {brand.id === 'hanssem' && (
+                <>
+                  <span className="badge badge-hot">인기</span>
+                  <span className="badge badge-sale"><span className="highlight-sale">할인</span> 10%</span>
+                  <span className="badge badge-progress">공동구매 진행중</span>
+                </>
+              )}
+              {brand.id === 'livart' && (
+                <>
+                  <span className="badge badge-sale"><span className="highlight-sale">할인</span> 5%</span>
+                  <span className="badge badge-deadline">공동구매 마감</span>
+                </>
+              )}
+              {brand.id === 'iloom' && (
+                <>
+                  <span className="badge badge-progress">공동구매 준비중</span>
+                  <span className="badge badge-best">전월 붙박이장 신축 단지 설치 우수 브랜드 1위</span>
+                </>
+              )}
+            </div>
+            <div style={{display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4}}>
+              <div style={{fontWeight: 'bold', fontSize: '1.18em'}}>{brand.name}</div>
+              {brand.id === 'hanssem' && (
+                <span className="ohou-rating">★ 4.8 <span className="ohou-rating-count">(후기 120)</span></span>
+              )}
+              {brand.id === 'livart' && (
+                <span className="ohou-rating">★ 4.6 <span className="ohou-rating-count">(후기 80)</span></span>
+              )}
+              {brand.id === 'iloom' && (
+                <span className="ohou-rating">★ 4.7 <span className="ohou-rating-count">(후기 95)</span></span>
+              )}
+            </div>
+            <div style={{fontSize: '0.99em', color: '#64748b', marginBottom: 10}}>{brand.desc}</div>
+            {/* <a href={brand.url} target="_blank" rel="noopener noreferrer" style={{color: '#2563eb', fontWeight: 'bold', fontSize: '0.97em', display: 'block', marginBottom: 10}}>공식 사이트 바로가기</a> */}
             {brand.id === 'hanssem' && (
               <>
                 {/* 공동구매 제안하기 */}
@@ -193,12 +253,12 @@ export default function CategoryCloset() {
                   <button onClick={() => handleAction('deposit')}>계약금 결제</button>
                   <button onClick={() => handleAction('group')}>공동구매 예약금 결제</button>
                 </div>
-                <div className="group-info">
+                <div className="group-info" style={{background: '#f0f7ff', border: '1px solid #b6d4fe'}}>
                   <div className="group-deadline">
-                    공동구매 마감: <b>{brand.group.deadline.replace('T', ' ').replace(':00', '')}</b>까지 <span style={{color:'#2563eb', fontWeight:'bold'}}>{brand.group.discount}% 할인</span>
+                    공동구매 마감: <b>{brand.group.deadline.replace('T', ' ').replace(':00', '')}</b>까지 <span className="highlight-sale">{brand.group.discount}% 할인</span>
                   </div>
                   <div className="group-countdown">{idx === 0 ? hanssemCountdown : null}</div>
-                  <div className="group-remain">{brand.group.remain}세대만 더 모집 시 <span style={{color:'#f59e42', fontWeight:'bold'}}>각 세대당 추가 {brand.group.extraDiscount}% 할인!</span></div>
+                  <div className="group-remain" style={{color:'#f59e42', fontWeight:'bold'}}>{brand.group.remain}세대만 더 모집 시 각 세대당 추가 {brand.group.extraDiscount}% 할인!</div>
                   <div className="group-buttons">
                     <button className="kakao-btn" onClick={() => handleAction('kakao')}>카카오톡 친구에게 추천하기</button>
                     <button className="group-apply-btn" onClick={() => handleAction('apply')}>공동구매 신청하기</button>
@@ -207,10 +267,15 @@ export default function CategoryCloset() {
               </>
             )}
             {brand.groupStatus === '마감' && (
-              <div className="group-info"><div className="group-deadline" style={{color:'#e11d48', fontWeight:'bold'}}>공동구매 마감되었습니다</div></div>
+              <div className="group-info" style={{background: '#fff1f2', border: '1px solid #fca5a5'}}><div className="group-deadline" style={{color:'#e11d48', fontWeight:'bold'}}>공동구매 마감되었습니다</div></div>
             )}
             {brand.groupStatus === '준비중' && (
-              <div className="group-info"><div className="group-deadline" style={{color:'#64748b', fontWeight:'bold'}}>공동구매 준비중입니다</div></div>
+              <div className="group-info" style={{background: '#fefce8', border: '1px solid #fde68a'}}><div className="group-deadline" style={{color:'#64748b', fontWeight:'bold'}}>공동구매 준비중입니다</div></div>
+            )}
+            {brand.id === 'iloom' && (
+              <div style={{margin: '8px 0 10px 0', color: '#e11d48', fontWeight: 'bold', fontSize: '1.02em'}}>
+                전월 붙박이장 신축 단지 설치 우수 브랜드 1위!<br />많은 고객님들이 일룸을 선택하고 있습니다.
+              </div>
             )}
           </div>
         ))}

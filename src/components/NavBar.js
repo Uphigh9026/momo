@@ -13,29 +13,34 @@ export default function NavBar() {
     cb && cb();
   };
 
+  const menus = [
+    { label: '견적요청', path: '/' },
+    { label: '고수찾기', path: '/' },
+    { label: '마켓', path: '/' },
+    { label: '커뮤니티', path: '/feed' },
+    { label: '인테리어', path: '/' },
+    { label: '이벤트', path: '/' },
+  ];
+
   return (
-    <nav className="nav-bar">
-      <div className="nav-logo" onClick={() => navigate('/')}>모모</div>
+    <nav className="momo09-nav-bar">
+      <div className="momo09-nav-logo" onClick={() => navigate('/')}>momo09</div>
       {isMobile && (
-        <button className="nav-hamburger" onClick={handleMenuToggle} aria-label="메뉴 열기/닫기">
-          <span className="nav-hamburger-icon">☰</span>
+        <button className="momo09-nav-hamburger" onClick={handleMenuToggle} aria-label="메뉴 열기/닫기">
+          <span className="momo09-nav-hamburger-icon">☰</span>
         </button>
       )}
-      <div className={`nav-menu${isMobile ? ' nav-menu-mobile' : ''}${menuOpen ? ' open' : ''}`}>
-        <button onClick={() => handleMenuClick()}>견적요청</button>
-        <button onClick={() => handleMenuClick()}>고수찾기</button>
-        <button onClick={() => handleMenuClick()}>마켓</button>
-        <button onClick={() => handleMenuClick()}>커뮤니티</button>
-        <button onClick={() => handleMenuClick()}>인테리어</button>
-        <button onClick={() => handleMenuClick()}>생활</button>
-        <button onClick={() => handleMenuClick()}>고수가입</button>
+      <div className={`momo09-nav-menu${isMobile ? ' momo09-nav-menu-mobile' : ''}${menuOpen ? ' open' : ''}`}>
+        {menus.map((m) => (
+          <button key={m.label} onClick={() => handleMenuClick(() => navigate(m.path))}>{m.label}</button>
+        ))}
       </div>
-      <div className="nav-actions">
-        <input className="nav-search" placeholder="통합검색" />
+      <div className="momo09-nav-actions">
+        <input className="momo09-nav-search" placeholder="통합검색" />
         <button onClick={() => handleMenuClick()}>글쓰기</button>
         <button onClick={() => handleMenuClick(() => navigate('/login'))}>로그인</button>
         <button onClick={() => handleMenuClick(() => navigate('/signup'))}>회원가입</button>
-        <a href="tel:01098103024" className="nav-customer-btn">고객센터</a>
+        <a href="tel:16700876" className="momo09-nav-customer-btn">고객센터</a>
       </div>
     </nav>
   );
