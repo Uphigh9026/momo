@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchComplexData } from '../api/complexData';
-import './Home.css';
 
 export default function Home() {
   const navigate = useNavigate();
@@ -12,24 +11,59 @@ export default function Home() {
   const [filtered, setFiltered] = React.useState([]);
   const [showSuggest, setShowSuggest] = React.useState(false);
 
+  // 카테고리 시트 fetch용 상태
+  const [extraCategories, setExtraCategories] = React.useState([]);
+
   React.useEffect(() => {
     fetchComplexData().then(data => {
-      // 단지명 컬럼명: '입주APT' (구글시트 기준)
-      const names = data.map(d => d['입주APT']).filter(Boolean);
-      setSuggestions(names);
+      console.log('구글시트 fetch 결과:', data);
+      if (data && data.length > 0) {
+        console.log('첫 데이터의 키:', Object.keys(data[0]));
+      }
+      // 입주APT명, 세대수, 시/도(시트의 B열)를 함께 suggestions에 저장
+      const items = data
+        .filter(d => d['입주APT'] && d['세대수'] && d['시/도'])
+        .map(d => ({ name: d['입주APT'], count: d['세대수'], city: d['시/도'], type: 'apt' }));
+
+      // 카테고리 시트 fetch (두 번째 구글시트)
+      fetch('https://api.allorigins.win/raw?url=https://docs.google.com/spreadsheets/d/1CHY3BuZi4YoGQa-OHq08kgwPHf_dNGYJyLiKbLlNXGs/export?format=csv')
+        .then(res => res.text())
+        .then(text => {
+          const rows = text.split('\n').filter(Boolean);
+          const headers = rows[0].split(',');
+          const catIdx = headers.findIndex(h => h.trim() === '카테고리명');
+          if (catIdx !== -1) {
+            const categories = rows.slice(1).map(line => {
+              const values = line.split(',');
+              return values[catIdx]?.trim();
+            }).filter(Boolean);
+            // 기타 카테고리용 상태 저장
+            setExtraCategories(categories.filter(cat => ![
+              '이사', '줄눈', '탄성', '붙박이장', '시스템에어컨', '입주청소', '커튼', '블라인드'
+            ].includes(cat)));
+          }
+        })
+        .catch(() => setSuggestions([...items]));
     });
   }, []);
 
   const handleChange = (e) => {
     const value = e.target.value;
     setQuery(value);
-    setFiltered(value ? suggestions.filter(s => s.includes(value)) : []);
+    setFiltered(value ? suggestions.filter(s => s.name.includes(value)) : []);
     setShowSuggest(!!value);
+    // 진단용 콘솔 로그
+    console.log('suggestions:', suggestions);
+    console.log('filtered:', value ? suggestions.filter(s => s.name.includes(value)) : []);
+    console.log('showSuggest:', !!value);
   };
   const handleSuggestClick = (s) => {
-    setQuery(s);
+    setQuery(s.name);
     setFiltered([]);
     setShowSuggest(false);
+    if (s.type === 'category') {
+      navigate(`/category/${s.name}`);
+    }
   };
 
   // 더미 데이터
@@ -115,6 +149,18 @@ export default function Home() {
     { id: 4, user: '최**', category: '청소', photo: '📸', rating: 5, comment: '완벽한 청소였습니다' },
   ];
 
+  // 카테고리 카드 순서 및 정보
+  const mainCategories = [
+    { id: '이사', name: '이사', icon: '🚚', desc: '포장이사, 잔짐정리 등' },
+    { id: '줄눈', name: '줄눈', icon: '🧽', desc: '줄눈시공, 욕실관리' },
+    { id: '탄성', name: '탄성', icon: '🧴', desc: '탄성코트, 방수' },
+    { id: '붙박이장', name: '붙박이장', icon: '🧰', desc: '맞춤 붙박이장' },
+    { id: '시스템에어컨', name: '시스템에어컨', icon: '❄️', desc: '에어컨 설치/청소' },
+    { id: '입주청소', name: '입주청소', icon: '🧹', desc: '입주/이사 청소' },
+    { id: '커튼', name: '커튼', icon: '🪟', desc: '커튼, 블라인드' },
+    { id: '블라인드', name: '블라인드', icon: '🪟', desc: '블라인드, 창호' },
+  ];
+
   return (
     <div className="bg-gray-50 min-h-screen font-pretendard">
       {/* 메인 배너 - Tailwind CSS 적용 */}
@@ -133,13 +179,20 @@ export default function Home() {
             onChange={handleChange} 
             onFocus={() => setShowSuggest(true)} 
             onBlur={() => setTimeout(() => setShowSuggest(false), 100)}
-            className="w-full px-4 py-3 border-2 border-momo-green rounded-l-lg text-base outline-none bg-white"
+            className="w-full px-4 py-3 rounded-l-lg text-base bg-white border-none outline-none shadow-none focus:ring-0 focus:border-transparent appearance-none"
           />
           {showSuggest && query && (
-            <ul className="absolute left-0 top-full w-full bg-white border-2 border-gray-200 rounded-b-xl shadow-lg z-10 max-h-60 overflow-y-auto">
+            <ul className="absolute left-0 top-full w-full bg-white border-2 border-gray-200 rounded-xl shadow-lg z-10 max-h-60 overflow-y-auto mt-1">
               {filtered.slice(0, 5).map((s, i) => (
-                <li key={i} onClick={() => handleSuggestClick(s)} className="px-4 py-3 cursor-pointer text-gray-800 hover:bg-gray-50 transition-colors">
-                  {s}
+                <li
+                  key={i}
+                  onClick={() => handleSuggestClick(s)}
+                  className="flex items-center px-2 py-2 sm:px-4 sm:py-3 cursor-pointer text-gray-800 transition-colors duration-150 hover:bg-momo-light-green hover:text-momo-green first:rounded-t-xl last:rounded-b-xl min-w-0"
+                >
+                  <svg className="w-5 h-5 text-momo-green mr-1 sm:mr-2 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" /></svg>
+                  <span className="font-semibold flex-1 text-left truncate whitespace-nowrap overflow-hidden">{s.name}</span>
+                  {s.type === 'apt' && <span className="text-xs text-gray-500 flex-1 text-center truncate whitespace-nowrap overflow-hidden">{s.count}세대</span>}
+                  {s.type === 'apt' && <span className="ml-auto text-xs text-gray-400 text-right truncate whitespace-nowrap overflow-hidden">{s.city}</span>}
                 </li>
               ))}
             </ul>
@@ -148,13 +201,18 @@ export default function Home() {
             검색
           </button>
         </form>
-        <div className="text-gray-500 text-sm">
-          <span>인기 검색어:</span>
-          {trending.map((t, i) => (
-            <span key={i} className="bg-momo-light-green text-momo-green rounded-full px-3 py-1 ml-2 font-medium text-sm">
-              {t}
-            </span>
-          ))}
+        {/* 인기 검색어 */}
+        <div className="max-w-6xl mx-auto mt-2 px-4">
+          <div className="flex items-center gap-2 text-gray-500 text-base mb-3">
+            <span className="flex-shrink-0">인기 검색어:</span>
+            <div className="flex gap-2 flex-nowrap overflow-x-auto scrollbar-hide">
+              {trending.map((t, i) => (
+                <span key={i} className="bg-momo-light-green text-momo-green rounded-full px-3 py-1 font-medium text-sm whitespace-nowrap min-w-fit">
+                  {t}
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -174,12 +232,27 @@ export default function Home() {
       <div className="max-w-6xl mx-auto mt-10 px-4">
         <h2 className="text-xl font-bold text-gray-800 mb-5 tracking-tight">카테고리 바로가기</h2>
         <div className="flex gap-4 flex-wrap justify-start">
-          {categories.map(cat => (
-            <div key={cat.id} className="bg-white rounded-2xl shadow-lg p-6 min-w-32 max-w-36 flex-1 text-center cursor-pointer transition-all hover:shadow-xl hover:-translate-y-1 hover:scale-105 mb-3" onClick={() => navigate(`/category/${cat.name}`)}>
-              <div className="text-4xl mb-2">{cat.icon}</div>
-              <div className="font-semibold text-gray-800 text-lg">{cat.name}</div>
+          {mainCategories.map(cat => (
+            <div
+              key={cat.id}
+              className="rounded-xl shadow-md bg-white hover:shadow-lg transition p-4 flex flex-col items-center w-32 sm:w-36 cursor-pointer border border-gray-100 hover:border-momo-green"
+              onClick={() => navigate(`/category/${cat.name}`)}
+            >
+              <div className="text-3xl mb-2">{cat.icon}</div>
+              <div className="font-bold text-lg text-gray-800 mb-1 whitespace-nowrap">{cat.name}</div>
+              <div className="text-gray-500 text-xs text-center whitespace-nowrap">{cat.desc}</div>
             </div>
           ))}
+          {/* 기타 카테고리 카드 */}
+          {extraCategories.length > 0 && (
+            <div className="rounded-xl shadow-md bg-white hover:shadow-lg transition p-4 flex flex-col items-center w-32 sm:w-36 cursor-pointer border border-gray-100 hover:border-momo-green"
+              onClick={() => navigate('/category/기타')}
+            >
+              <div className="text-2xl mb-2">🗂️</div>
+              <div className="font-bold text-lg text-gray-800 mb-1 whitespace-nowrap">기타</div>
+              <div className="text-gray-500 text-xs text-center whitespace-nowrap mb-1">더 많은 시공/서비스</div>
+            </div>
+          )}
         </div>
       </div>
 
