@@ -1,0 +1,10 @@
+/
+home
+feed
+reviews
+category
+complex
+estimate
+poll
+login
+signup 

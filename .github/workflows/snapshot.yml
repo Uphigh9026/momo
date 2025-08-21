@@ -1,0 +1,56 @@
+name: Snapshot HTML for ChatGPT (GitHub Pages)
+
+on:
+  push:
+    branches: [ main ]   # 기본 브랜치명에 맞게 수정
+
+jobs:
+  build-and-snapshot:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # 패키지 설치 (lock 파일 있으면 ci, 없으면 install)
+      - name: Install deps
+        run: |
+          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+          npm i -D playwright serve --no-save
+          npx playwright install --with-deps
+
+      # 앱 빌드
+      - name: Build app
+        run: |
+          if [ -f package.json ] && grep -q "\"build\"" package.json; then
+            npm run build
+          else
+            echo "No build script found"; exit 1
+          fi
+
+      # 빌드 결과( dist 또는 build )를 5000번 포트로 프리뷰 서버 띄움
+      - name: Start static preview
+        run: |
+          if [ -d dist ]; then D=dist; elif [ -d build ]; then D=build; else echo "No dist/build"; exit 1; fi
+          echo "SNAP_DIR=$D" >> $GITHUB_ENV
+          npx serve -s $D -l 5000 &
+
+      # 스냅샷 생성
+      - name: Prerender routes
+        env:
+          SNAPSHOT_PORT: 5000
+          PROD_ORIGIN: https://momo-alpha-pink.vercel.app
+        run: |
+          node scripts/prerender.mjs
+          test -d snapshot && ls -R snapshot | head -n 50
+
+      # GitHub Pages에 게시 (gh-pages 브랜치)
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: snapshot
+          publish_branch: gh-pages 
