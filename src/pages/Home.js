@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchComplexData } from '../api/complexData';
+import CategoryCard from '../components/CategoryCard';
 
 export default function Home() {
   const navigate = useNavigate();
@@ -14,19 +15,26 @@ export default function Home() {
   // 카테고리 시트 fetch용 상태
   const [extraCategories, setExtraCategories] = React.useState([]);
 
+  // 필드명 유연 매칭 함수 추가
+  const getField = (obj, key) => {
+    // 공백, 대소문자, 유사 키 자동 매칭
+    const foundKey = Object.keys(obj).find(k => k.replace(/\s/g, '') === key.replace(/\s/g, ''));
+    return foundKey ? obj[foundKey] : '';
+  };
+
   React.useEffect(() => {
     fetchComplexData().then(data => {
       console.log('구글시트 fetch 결과:', data);
       if (data && data.length > 0) {
         console.log('첫 데이터의 키:', Object.keys(data[0]));
       }
-      // 입주APT명, 세대수, 시/도(시트의 B열)를 함께 suggestions에 저장
+      // 입주APT명, 세대수, 시/도(시트의 B열)를 함께 suggestions에 저장 (getField 사용)
       const items = data
-        .filter(d => d['입주APT'] && d['세대수'] && d['시/도'])
-        .map(d => ({ name: d['입주APT'], count: d['세대수'], city: d['시/도'], type: 'apt' }));
+        .filter(d => getField(d, '입주APT') && getField(d, '세대수') && getField(d, '시/도'))
+        .map(d => ({ name: getField(d, '입주APT'), count: getField(d, '세대수'), city: getField(d, '시/도'), type: 'apt' }));
 
       // 카테고리 시트 fetch (두 번째 구글시트)
-      fetch('https://api.allorigins.win/raw?url=https://docs.google.com/spreadsheets/d/1CHY3BuZi4YoGQa-OHq08kgwPHf_dNGYJyLiKbLlNXGs/export?format=csv')
+      fetch('https://corsproxy.io/?https://docs.google.com/spreadsheets/d/1CHY3BuZi4YoGQa-OHq08kgwPHf_dNGYJyLiKbLlNXGs/export?format=csv')
         .then(res => res.text())
         .then(text => {
           const rows = text.split('\n').filter(Boolean);
@@ -41,28 +49,49 @@ export default function Home() {
             setExtraCategories(categories.filter(cat => ![
               '이사', '줄눈', '탄성', '붙박이장', '시스템에어컨', '입주청소', '커튼', '블라인드'
             ].includes(cat)));
+            // 카테고리명도 자동완성 후보에 추가
+            const categorySuggestions = categories.map(cat => ({ name: cat, type: 'category' }));
+            setSuggestions([...items, ...categorySuggestions]);
+          } else {
+            setSuggestions([...items]);
           }
         })
-        .catch(() => setSuggestions([...items]));
+        .catch(err => {
+          console.error('카테고리 시트 fetch 에러:', err);
+          setSuggestions([...items]);
+        });
+    }).catch(err => {
+      console.error('구글시트 fetch 에러:', err);
+      setSuggestions([]);
     });
   }, []);
 
   const handleChange = (e) => {
     const value = e.target.value;
     setQuery(value);
-    setFiltered(value ? suggestions.filter(s => s.name.includes(value)) : []);
-    setShowSuggest(!!value);
+    const filteredList = value
+      ? suggestions.filter(s =>
+          s.name &&
+          s.name.replace(/\s/g, '').toLowerCase().includes(value.replace(/\s/g, '').toLowerCase())
+        )
+      : [];
+    setFiltered(filteredList);
+    setShowSuggest(!!value && filteredList.length > 0);
     // 진단용 콘솔 로그
     console.log('suggestions:', suggestions);
-    console.log('filtered:', value ? suggestions.filter(s => s.name.includes(value)) : []);
-    console.log('showSuggest:', !!value);
+    console.log('filtered:', filteredList);
+    console.log('showSuggest:', !!value && filteredList.length > 0);
   };
   const handleSuggestClick = (s) => {
     setQuery(s.name);
     setFiltered([]);
     setShowSuggest(false);
     if (s.type === 'category') {
-      navigate(`/category/${s.name}`);
+      if (s.name === '붙박이장') {
+        navigate('/estimate/start');
+      } else {
+        navigate(`/category/${s.name}`);
+      }
     }
   };
 
@@ -180,8 +209,18 @@ export default function Home() {
             onFocus={() => setShowSuggest(true)} 
             onBlur={() => setTimeout(() => setShowSuggest(false), 100)}
             className="w-full px-4 py-3 rounded-l-lg text-base bg-white border-none outline-none shadow-none focus:ring-0 focus:border-transparent appearance-none"
+            onKeyDown={e => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                if (filtered.length > 0) {
+                  handleSuggestClick(filtered[0]);
+                } else if (query && suggestions.some(s => s.name === query && s.type === 'category')) {
+                  handleSuggestClick({ name: query, type: 'category' });
+                }
+              }
+            }}
           />
-          {showSuggest && query && (
+          {showSuggest && (
             <ul className="absolute left-0 top-full w-full bg-white border-2 border-gray-200 rounded-xl shadow-lg z-10 max-h-60 overflow-y-auto mt-1">
               {filtered.slice(0, 5).map((s, i) => (
                 <li
@@ -231,27 +270,24 @@ export default function Home() {
       {/* 카테고리 바로가기 */}
       <div className="max-w-6xl mx-auto mt-10 px-4">
         <h2 className="text-xl font-bold text-gray-800 mb-5 tracking-tight">카테고리 바로가기</h2>
-        <div className="flex gap-4 flex-wrap justify-start">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 justify-center">
           {mainCategories.map(cat => (
-            <div
+            <CategoryCard
               key={cat.id}
-              className="rounded-xl shadow-md bg-white hover:shadow-lg transition p-4 flex flex-col items-center w-32 sm:w-36 cursor-pointer border border-gray-100 hover:border-momo-green"
+              icon={cat.icon}
+              label={cat.name}
+              desc={cat.desc}
               onClick={() => navigate(`/category/${cat.name}`)}
-            >
-              <div className="text-3xl mb-2">{cat.icon}</div>
-              <div className="font-bold text-lg text-gray-800 mb-1 whitespace-nowrap">{cat.name}</div>
-              <div className="text-gray-500 text-xs text-center whitespace-nowrap">{cat.desc}</div>
-            </div>
+            />
           ))}
           {/* 기타 카테고리 카드 */}
           {extraCategories.length > 0 && (
-            <div className="rounded-xl shadow-md bg-white hover:shadow-lg transition p-4 flex flex-col items-center w-32 sm:w-36 cursor-pointer border border-gray-100 hover:border-momo-green"
+            <CategoryCard
+              icon={"📂"}
+              label={"기타"}
+              desc={"더 많은 시공/서비스"}
               onClick={() => navigate('/category/기타')}
-            >
-              <div className="text-2xl mb-2">🗂️</div>
-              <div className="font-bold text-lg text-gray-800 mb-1 whitespace-nowrap">기타</div>
-              <div className="text-gray-500 text-xs text-center whitespace-nowrap mb-1">더 많은 시공/서비스</div>
-            </div>
+            />
           )}
         </div>
       </div>

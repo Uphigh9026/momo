@@ -2,8 +2,9 @@
 // 구글 시트에서 신축 단지 데이터를 fetch하는 함수 (CSV 방식)
 
 export async function fetchComplexData() {
-  // CORS 프록시 + 새 시트 URL
-  const url = 'https://api.allorigins.win/raw?url=https://docs.google.com/spreadsheets/d/1cDfCBVIH5Mtuak3kvXmKCXvvfO6apZpHR5Apv6KfcRU/export?format=csv';
+  const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1cDfCBVIH5Mtuak3kvXmKCXvvfO6apZpHR5Apv6KfcRU/export?format=csv';
+  const PROXY_URL = 'https://corsproxy.io/?';
+  const url = PROXY_URL + SHEET_URL;
   try {
     const res = await fetch(url);
     const text = await res.text();

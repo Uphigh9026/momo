@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import CategoryCard from '../components/CategoryCard';
 
 export default function CategoryCloset() {
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    fetch('https://api.allorigins.win/raw?url=https://docs.google.com/spreadsheets/d/1CHY3BuZi4YoGQa-OHq08kgwPHf_dNGYJyLiKbLlNXGs/export?format=csv')
+    fetch('https://corsproxy.io/?https://docs.google.com/spreadsheets/d/1CHY3BuZi4YoGQa-OHq08kgwPHf_dNGYJyLiKbLlNXGs/export?format=csv')
       .then(res => res.text())
       .then(text => {
         const rows = text.split('\n').filter(Boolean);
@@ -25,17 +26,16 @@ export default function CategoryCloset() {
   }, []);
 
   return (
-    <div className="max-w-2xl mx-auto py-10 px-4">
-      <h1 className="text-2xl font-bold mb-6 text-center">기타 카테고리</h1>
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+    <div className="max-w-3xl mx-auto py-10 px-4">
+      <h1 className="text-2xl font-bold mb-8 text-center">기타 카테고리</h1>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
         {categories.map(cat => (
-          <div
+          <CategoryCard
             key={cat}
-            className="rounded-xl shadow-md bg-white hover:shadow-lg transition p-4 flex flex-col items-center cursor-pointer border border-gray-100 hover:border-momo-green text-center"
+            icon={"📂"}
+            label={cat}
             onClick={() => navigate(`/category/${cat}`)}
-          >
-            <div className="font-bold text-base text-gray-800 mb-1 whitespace-nowrap">{cat}</div>
-          </div>
+          />
         ))}
       </div>
     </div>
