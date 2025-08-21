@@ -5,7 +5,16 @@ module.exports = {
     "./public/index.html"
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'momo-green': '#03c75a',
+        'momo-dark-green': '#029e4b',
+        'momo-light-green': '#e9fbe7',
+      },
+      fontFamily: {
+        'pretendard': ['Pretendard', 'Noto Sans KR', 'sans-serif'],
+      }
+    },
   },
   plugins: [],
 }
