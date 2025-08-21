@@ -21,6 +21,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "postbuild": "react-snap",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -50,7 +51,9 @@
     "tailwindcss": "^3.4.3"
   },
   "reactSnap": {
-    "puppeteerArgs": ["--no-sandbox"],
-    "include": ["/"]
+    "puppeteerArgs": ["--no-sandbox", "--disable-web-security"],
+    "include": ["/"],
+    "waitFor": 2000,
+    "removeBlobs": true
   }
 }
