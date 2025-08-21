@@ -54,10 +54,12 @@
     "tailwindcss": "^3.4.3"
   },
   "reactSnap": {
-    "inlineCss": true,
-    "puppeteerArgs": ["--no-sandbox"],
+    "puppeteerArgs": ["--no-sandbox", "--disable-web-security", "--disable-features=VizDisplayCompositor"],
+    "include": ["/"],
+    "waitFor": 3000,
+    "removeBlobs": true,
     "skipThirdPartyRequests": true,
-    "minifyHtml": { "collapseWhitespace": true },
-    "include": ["/","/category/붙박이장","/category/커튼","/login","/signup","/poll","/feed","/reviews","/estimate/start","/estimate/form"]
+    "asyncScriptTags": true,
+    "preloadImages": false
   }
 }
